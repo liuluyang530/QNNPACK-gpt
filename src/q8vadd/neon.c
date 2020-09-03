@@ -29,7 +29,7 @@ void q8vadd_ukernel__neon(
   const uint8x16_t vy_max = vld1q_dup_u8(&quantization_params->neon.y_max);
   const uint8x16_t vy_min = vld1q_dup_u8(&quantization_params->neon.y_min);
   if QNNP_LIKELY(n >= 8) {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
     for (; n >= 32; n -= 32) {
       const uint8x16_t va01 = vld1q_u8(a); a += 16;
       const uint8x16_t vb01 = vld1q_u8(b); b += 16;
@@ -158,14 +158,14 @@ void q8vadd_ukernel__neon(
 
       /* Multiply by factors and accumulate products */
       int32x4_t vacc_lo = vmulq_s32(vmovl_s16(vget_low_s16(vxa)), va_multiplier);
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       int32x4_t vacc_hi = vmulq_s32(vmovl_high_s16(vxa), va_multiplier);
 #else
       int32x4_t vacc_hi = vmulq_s32(vmovl_s16(vget_high_s16(vxa)), va_multiplier);
 #endif
 
       vacc_lo = vmlaq_s32(vacc_lo, vmovl_s16(vget_low_s16(vxb)), vb_multiplier);
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       vacc_hi = vmlaq_s32(vacc_hi, vmovl_high_s16(vxb), vb_multiplier);
 #else
       vacc_hi = vmlaq_s32(vacc_hi, vmovl_s16(vget_high_s16(vxb)), vb_multiplier);
@@ -179,7 +179,7 @@ void q8vadd_ukernel__neon(
       vacc_hi = vrshlq_s32(vacc_hi, vright_shift);
 
       /* Pack, saturate, and add output zero point */
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       const int16x8_t vacc = vqaddq_s16(vqmovn_high_s32(vqmovn_s32(vacc_lo), vacc_hi), vy_zero_point);
 #else
       const int16x8_t vacc = vqaddq_s16(vcombine_s16(vqmovn_s32(vacc_lo), vqmovn_s32(vacc_hi)), vy_zero_point);
@@ -203,14 +203,14 @@ void q8vadd_ukernel__neon(
 
       /* Multiply by factors and accumulate products */
       int32x4_t vacc_lo = vmulq_s32(vmovl_s16(vget_low_s16(vxa)), va_multiplier);
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       int32x4_t vacc_hi = vmulq_s32(vmovl_high_s16(vxa), va_multiplier);
 #else
       int32x4_t vacc_hi = vmulq_s32(vmovl_s16(vget_high_s16(vxa)), va_multiplier);
 #endif
 
       vacc_lo = vmlaq_s32(vacc_lo, vmovl_s16(vget_low_s16(vxb)), vb_multiplier);
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       vacc_hi = vmlaq_s32(vacc_hi, vmovl_high_s16(vxb), vb_multiplier);
 #else
       vacc_hi = vmlaq_s32(vacc_hi, vmovl_s16(vget_high_s16(vxb)), vb_multiplier);
@@ -224,7 +224,7 @@ void q8vadd_ukernel__neon(
       vacc_hi = vrshlq_s32(vacc_hi, vright_shift);
 
       /* Pack, saturate, and add output zero point */
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       const int16x8_t vacc = vqaddq_s16(vqmovn_high_s32(vqmovn_s32(vacc_lo), vacc_hi), vy_zero_point);
 #else
       const int16x8_t vacc = vqaddq_s16(vcombine_s16(vqmovn_s32(vacc_lo), vqmovn_s32(vacc_hi)), vy_zero_point);

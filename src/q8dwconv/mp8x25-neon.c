@@ -479,7 +479,7 @@ void q8dwconv_ukernel_mp8x25__neon(
       vacc_lo = vrshlq_s32(vacc_lo, vright_shift);
       vacc_hi = vrshlq_s32(vacc_hi, vright_shift);
 
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       const int16x8_t vacc = vqaddq_s16(vqmovn_high_s32(vqmovn_s32(vacc_lo), vacc_hi), vzero_point);
 #else
       const int16x8_t vacc = vqaddq_s16(vcombine_s16(vqmovn_s32(vacc_lo), vqmovn_s32(vacc_hi)), vzero_point);
@@ -552,7 +552,7 @@ void q8dwconv_ukernel_mp8x25__neon(
       vacc_lo = vrshlq_s32(vacc_lo, vright_shift);
       vacc_hi = vrshlq_s32(vacc_hi, vright_shift);
 
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__gptx__)
       const int16x8_t vacc = vqaddq_s16(vqmovn_high_s32(vqmovn_s32(vacc_lo), vacc_hi), vzero_point);
 #else
       const int16x8_t vacc = vqaddq_s16(vcombine_s16(vqmovn_s32(vacc_lo), vqmovn_s32(vacc_hi)), vzero_point);

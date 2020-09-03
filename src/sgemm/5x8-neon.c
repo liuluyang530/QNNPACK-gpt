@@ -62,7 +62,8 @@ void sgemm_ukernel_5x8__neon(
       const float32x4_t vb0123 = vld1q_f32(w); w += 4;
       const float32x4_t vb4567 = vld1q_f32(w); w += 4;
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__gptx__)
+
       vacc0x0123 = vfmaq_lane_f32(vacc0x0123, vb0123, va0, 0);
       vacc0x4567 = vfmaq_lane_f32(vacc0x4567, vb4567, va0, 0);
       vacc1x0123 = vfmaq_lane_f32(vacc1x0123, vb0123, va1, 0);
@@ -91,7 +92,8 @@ void sgemm_ukernel_5x8__neon(
       const float32x4_t vb0123 = vld1q_f32(w); w += 4;
       const float32x4_t vb4567 = vld1q_f32(w); w += 4;
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__gptx__)
+
       vacc0x0123 = vfmaq_lane_f32(vacc0x0123, vb0123, va0, 1);
       vacc0x4567 = vfmaq_lane_f32(vacc0x4567, vb4567, va0, 1);
       vacc1x0123 = vfmaq_lane_f32(vacc1x0123, vb0123, va1, 1);
@@ -126,7 +128,8 @@ void sgemm_ukernel_5x8__neon(
     const float32x4_t vb0123 = vld1q_f32(w); w += 4;
     const float32x4_t vb4567 = vld1q_f32(w); w += 4;
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__gptx__)
+
     vacc0x0123 = vfmaq_f32(vacc0x0123, vb0123, va0);
     vacc0x4567 = vfmaq_f32(vacc0x4567, vb4567, va0);
     vacc1x0123 = vfmaq_f32(vacc1x0123, vb0123, va1);
